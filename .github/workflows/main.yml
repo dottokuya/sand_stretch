@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - main
-    - ci
   pull_request:
     branches:
     - main
@@ -59,7 +58,7 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Configure
       shell: bash
@@ -68,3 +67,17 @@ jobs:
     - name: Build
       shell: bash
       run: cmake --build build --config Release --parallel 4
+
+    - name: Prepare build artifacts
+      shell: bash
+      working-directory: build
+      run: |
+        shopt -s extglob  # Enable bash extended globbing
+        mkdir build-${{ runner.os }}
+        mv *_artefacts/${{ env.BUILD_TYPE }}/@(VST3|AU)/*.@(vst3|component) build-${{ runner.os }}/
+        
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ runner.os }}
+        path: build/build-${{ runner.os }}
