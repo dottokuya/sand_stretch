@@ -33,7 +33,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt install libasound2-dev libcurl4-openssl-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev libjack-jackd2-dev
+        sudo apt install wget libasound2-dev libcurl4-openssl-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev libjack-jackd2-dev
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
 
@@ -74,7 +74,7 @@ jobs:
       run: |
         shopt -s extglob  # Enable bash extended globbing
         mkdir build-${{ runner.os }}
-        mv *_artefacts/${{ env.BUILD_TYPE }}/@(VST3|AU)/*.@(vst3|component) build-${{ runner.os }}/
+        mv *_artefacts/Release/@(VST3|AU)/*.@(vst3|component) build-${{ runner.os }}/
         
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
