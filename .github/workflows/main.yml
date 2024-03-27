@@ -68,13 +68,23 @@ jobs:
       shell: bash
       run: cmake --build build --config Release --parallel 4
 
-    - name: Prepare build artifacts
+    - name: Prepare build artifacts (Win/Mac)
       shell: bash
       working-directory: build
+      if: runner.os != 'Linux'
       run: |
         shopt -s extglob  # Enable bash extended globbing
         mkdir build-${{ runner.os }}
         mv *_artefacts/Release/@(VST3|AU)/*.@(vst3|component) build-${{ runner.os }}/
+
+    - name: Prepare build artifacts (Linux)
+      shell: bash
+      working-directory: build
+      if: runner.os == 'Linux'
+      run: |
+        shopt -s extglob  # Enable bash extended globbing
+        mkdir build-${{ runner.os }}
+        mv *_artefacts/VST3/*.vst3 build-${{ runner.os }}/
         
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
